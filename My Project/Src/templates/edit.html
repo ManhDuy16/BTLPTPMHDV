@@ -1,0 +1,59 @@
+{% extends "layouts/layouts.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Edit Book</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Sửa sách: {{ data[1] }}</h6>
+        </div>
+        <form class="card-body" id="edit">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Tên cuốn sách:</label>
+                    <input class="form-control" type="text" name="name" value="{{ data[1] }}" placeholder="Tên cuốn sách" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Tác giả:</label>
+                    <input class="form-control" type="text" name="author" value="{{ data[2] }}" placeholder="Tác giả của cuốn sách" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Thể loại:</label>
+                    <input class="form-control" type="text" name="tags" value="{{ data[3] }}" placeholder="Thể loại" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Năm xuất bản:</label>
+                    <input class="form-control" type="text" name="year_xb" value="{{ data[4] }}" placeholder="Năm xuất bản" required>
+                </div>
+                <div class="col-md-12">
+                    <button class="btn btn-success w-100">Lưu lại</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock  %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $("#edit").on("submit", (e) => {
+        e.preventDefault();
+        $.ajax({
+            url: "/edit/{{ data[0] }}",
+            type: "POST",
+            data: $("#edit").serialize(),
+            dataType: "JSON",
+            success: (data) => {
+                swal(data.title, data.message, data.type).then(() => {
+                    if (data.reload) {
+                        window.location.reload();
+                    }
+                });
+            }
+        });   
+    });
+</script>
+{% endblock %}
+
+            

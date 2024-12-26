@@ -1,0 +1,59 @@
+{% extends "layouts/layouts.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Add New Book</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thêm một cuốn sách mới</h6>
+        </div>
+        <form class="card-body" id="add">
+            <div class="row">
+                <div class="form-group col-md-6">
+                    <label>Tên cuốn sách:</label>
+                    <input class="form-control" type="text" name="name" placeholder="Tên cuốn sách" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Năm xuất bản:</label>
+                    <input class="form-control" type="text" name="year_xb" placeholder="Năm xuất bản" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Tác giả:</label>
+                    <input class="form-control" type="text" name="author" placeholder="Tác giả của cuốn sách" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Thể loại:</label>
+                    <input class="form-control" type="text" name="tags" placeholder="Thể loại" required>
+                </div>
+                <div class="col-md-12">
+                    <button class="btn btn-success w-100">Thêm mới</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock  %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $("#add").on("submit", (e) => {
+        e.preventDefault();
+        $.ajax({
+            url: "/add",
+            type: "POST",
+            data: $("#add").serialize(),
+            dataType: "JSON",
+            success: (data) => {
+                swal(data.title, data.message, data.type).then(() => {
+                    if (data.reload) {
+                        window.location.reload();
+                    }
+                });
+            }
+        });   
+    });
+</script>
+{% endblock  %}
+
+            

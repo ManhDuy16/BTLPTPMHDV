@@ -1,0 +1,88 @@
+{% extends "layouts/layouts.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Quản lý sách</h1>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách các sách hiện có: {{ data|length }} sách</h6>
+        </div>
+        <div class="card-body">
+            <div class="row" style="min-height: 500px;">
+                <div class="col-md-12">
+                    <form class="form-inline row" method="GET" action="search">
+                        <div class="col-md-11">
+                            <div class="input-group mb-2 mr-sm-2 w-100">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Search</div>
+                                </div>
+                                <input type="text" class="form-control" name="search" value="{{ search if search is defined else '' }}" placeholder="Nhập tên sách muốn tìm">
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-primary w-100 mb-2">Search</button>
+                        </div>
+                    </form>
+                </div>
+                {% if data|length > 0: %}
+                    {%for row in data %}
+                    <div class="col-md-3">
+                        <div class="card">
+                            <img class="card-img-top" src="{{ url_for('static', filename='img/images.png') }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ row[1] }}</h5>
+                                <p class="card-text">
+                                    Tác giả: {{ row[2] }} <br>
+                                    Thể loại: {{ row[3] }} <br>
+                                    Năm sáng tác: {{ row[4] }} <br>
+                                </p>
+                            </div>
+                            <div class="card-footer">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a class="btn btn-warning w-100" href="edit/{{ row[0] }}">
+                                            <i class="fa fa-edit"></i> Sửa
+                                        </a>    
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a class="btn btn-danger w-100" onclick="delete_book({{ row[0] }});">
+                                            <i class="fa fa-trash"></i> Xoá
+                                        </a>    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                {% else %}
+                    <div class="col-md-12 text-center">
+                         Không có dữ liệu...
+                    </div>
+                {% endif %}
+            </div> 
+        </div>
+    </div>
+</div>
+{% endblock  %}
+
+{% block scripts %}
+<script type="text/javascript">
+    function delete_book(id) {
+        $.ajax({
+            url: "/delete/" + id,
+            type: "GET",
+            dataType: "JSON",
+            success: (data) => {
+                swal(data.title, data.message, data.type).then(() => {
+                    if (data.reload) {
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    }
+</script>
+{% endblock  %}
+
+            

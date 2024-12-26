@@ -1,0 +1,98 @@
+{% extends "layouts/layouts.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800">Quản lý sách</h1>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Danh sách các sách hiện có: {{ data|length }} sách</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <h6>Cho mượn sách</h6>
+                    <form class="form-inline row" id="rent">
+                        <div class="col-md-2">
+                            <div class="input-group mb-2 mr-sm-2 w-100">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Mã sách</div>
+                                </div>
+                                <input type="text" class="form-control" name="id_book" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-2 mr-sm-2 w-100">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Tên người mượn</div>
+                                </div>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-2 mr-sm-2 w-100">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Mã sinh viên</div>
+                                </div>
+                                <input type="text" class="form-control" name="studentId" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100 mb-2">Cho mượn</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-12">
+                    <table class="table table-bordered text-center">
+                        <thead>
+                            <th>Mã sách</th>
+                            <th>Tên người mượn</th>
+                            <th>Mã sinh viên</th>
+                            <th>Ngày mượn</th>
+                        </thead>
+                        <tbody>
+                            {% if data|length > 0: %}
+                                {%for row in data %}
+                                <tr>
+                                    <td>{{ row[1] }}</td>
+                                    <td>{{ row[2] }}</td>
+                                    <td>{{ row[3] }}</td>
+                                    <td>{{ row[4] }}</td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="4">Không có dữ liệu</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                    
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+{% endblock  %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $("#rent").on("submit", (e) => {
+        e.preventDefault();
+        $.ajax({
+            url: "",
+            type: "POST",
+            data: $("#rent").serialize(),
+            dataType: "JSON",
+            success: (data) => {
+                swal(data.title, data.message, data.type).then(() => {
+                    if (data.reload) {
+                        window.location.reload();
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock  %}
+
+            
